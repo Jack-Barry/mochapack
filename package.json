@@ -21,7 +21,7 @@
     "format": "prettier {src,test}/**/* ./*.json --write --loglevel warn",
     "lint": "eslint src/**/*.ts test/**/*.ts --fix",
     "pretest": "yarn run clean-tmp && yarn run build",
-    "test": "ts-mocha --timeout 10000 --recursive --require @babel/register --exit \"test/**/*.test.ts\"",
+    "test": "ts-mocha --timeout 10000 --recursive --require @babel/register --exit \"test/!(byom)/**/*.test.ts\"",
     "cover": "cross-env BABEL_ENV=coverage nyc --reporter=lcov --reporter=text npm test",
     "posttest": "yarn run format && yarn run lint",
     "docs:clean": "del-cli _book",
@@ -32,7 +32,9 @@
     "prepublishOnly": "yarn run build  && yarn run docs:build",
     "postpublish": "yarn run docs:deploy",
     "release": "np",
-    "watch": "tsc -w"
+    "watch": "tsc -w",
+    "test:byom": "yarn run pretest && ts-mocha --recursive --exit \"test/byom/**/*.test.ts\"",
+    "cover:byom": "nyc --reporter=lcov --reporter=text --include \"src/byom/**/*.ts\" --all yarn run test:byom"
   },
   "repository": {
     "type": "git",
