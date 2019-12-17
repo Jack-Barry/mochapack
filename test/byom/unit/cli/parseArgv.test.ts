@@ -1,48 +1,91 @@
 /* eslint-env node, mocha */
+import { expect } from 'chai'
 import { itParses } from '../../helpers/parseArgvHelpers'
+import parseArgv from '../../../../src/byom/cli/parseArgv'
 
 describe('parseArgv', () => {
   context('encountering duplicated arguments', () => {
-    xit('should throw for non arrays', () => {})
+    it('should throw for non array arguments', () => {
+      const argv = [
+        '--webpack-config',
+        'webpack-config.js',
+        '--webpack-config',
+        'webpack-config2.js'
+      ]
 
-    xit('should not throw for arrays', () => {})
+      expect(() => {
+        parseArgv(argv)
+      }).to.throw()
+    })
+
+    it('should not throw for array arguments', () => {
+      const argv = ['--include', 'file1.js', '--include', 'file2.js']
+
+      expect(() => {
+        parseArgv(argv)
+      }).not.to.throw()
+    })
   })
+  ;[true, false].forEach(bool => {
+    context(`when ignore=${bool}`, () => {
+      it(`${bool ? 'ignores' : 'uses'} default options`, () => {
+        if (bool) {
+          expect(parseArgv([], bool)).to.eql({})
+          expect(parseArgv([], bool)).to.be.empty
+        } else {
+          expect(parseArgv([], bool)).not.to.be.empty
+        }
+      })
 
-  context('when ignore=true', () => {
-    xit('ignores default options', () => {})
+      context('when encountering options without values & file', () => {
+        it('parses files correctly', () => {
+          const argv = ['--clear-terminal', 'test/bin/fixture']
+          const parsed = parseArgv(argv, bool)
 
-    context('when encountering options without values & file', () => {
-      xit('parses files correctly')
-    })
+          expect(parsed.files).to.eql(['test/bin/fixture'])
+        })
+      })
 
-    context('when encountering options with values & file', () => {
-      xit('parses files correctly')
-    })
-  })
+      context('when encountering options with values & file', () => {
+        it('parses files correctly', () => {
+          const argv = [
+            '--webpack-config',
+            'webpack-config.js',
+            'test/bin/fixture'
+          ]
+          const parsed = parseArgv(argv, bool)
 
-  context('when ignore=false', () => {
-    xit('uses default options', () => {})
-
-    context('when encountering options without values & file', () => {
-      xit('parses files correctly')
-    })
-
-    context('when encountering options with values & file', () => {
-      xit('parses files correctly')
+          expect(parsed.files).to.eql(['test/bin/fixture'])
+        })
+      })
     })
   })
 
   context('when no test file paths are provided', () => {
-    xit('uses "./test" as default for files', () => {})
+    it('uses "./test" as default for files', () => {
+      const parsed = parseArgv([])
+
+      expect(parsed.files).to.eql(['./test'])
+    })
   })
 
   context('when encountering non-options', () => {
     context('when one non-option is present', () => {
-      xit('parses the non-option as the test file path', () => {})
+      it('parses the non-option as the test file path', () => {
+        const argv = ['./path/to/tests']
+        const parsed = parseArgv(argv)
+
+        expect(parsed.files).to.eql(['./path/to/tests'])
+      })
     })
 
     context('when multiple non-options are present', () => {
-      xit('parses non-options as multiple test file paths', () => {})
+      it('parses non-options as multiple test file paths', () => {
+        const argv = ['./path/to/tests', './path/to/tests2']
+        const parsed = parseArgv(argv)
+
+        expect(parsed.files).to.eql(['./path/to/tests', './path/to/tests2'])
+      })
     })
   })
 
@@ -53,6 +96,27 @@ describe('parseArgv', () => {
           {
             given: ['--byom', 'path/to/byom.js'],
             expected: { byomOptions: { path: 'path/to/byom.js' } }
+          }
+        ]
+
+        itParses(parameters, 'byomOptions')
+      })
+
+      context('byom-config', () => {
+        const parameters = [
+          {
+            given: [
+              '--byom',
+              'path/to/byom.js',
+              '--byom-config',
+              'path/to/config.json'
+            ],
+            expected: {
+              byomOptions: {
+                configPath: 'path/to/config.json',
+                path: 'path/to/byom.js'
+              }
+            }
           }
         ]
 
@@ -144,17 +208,72 @@ describe('parseArgv', () => {
       })
     })
 
-    context('for Mocha', () => {
-      xit('funnels them to .mochaOptions', () => {})
+    xcontext('for Mocha', () => {
+      // Waiting for https://github.com/mochajs/mocha/pull/4122
+      // Will test with one or two flags, doesn't need to be extensive
     })
 
-    context('when unrecognized', () => {
+    context('for BYOM', () => {
       context('when byom is not defined', () => {
-        xit('throws an error', () => {})
+        const parameterSets = [
+          {
+            description: 'option by itself',
+            params: ['--byom-option', 'unknown']
+          },
+          {
+            description: 'option after known boolean',
+            params: ['--clear-terminal', '--byom-option', 'unknown']
+          },
+          {
+            description: 'option after known string',
+            params: ['--include', 'test', '--byom-option', 'unknown']
+          },
+          {
+            description: 'config by itself',
+            params: ['--byom-config', 'config.json']
+          },
+          {
+            description: 'config after known boolean',
+            params: ['--clear-terminal', '--byom-config', 'config.json']
+          },
+          {
+            description: 'config after known string',
+            params: ['--include', 'test', '--byom-config', 'config.json']
+          }
+        ]
+
+        parameterSets.forEach(paramSet => {
+          it(`throws an error for byom ${paramSet.description}`, () => {
+            expect(() => {
+              parseArgv(paramSet.params)
+            }).to.throw()
+          })
+        })
       })
 
       context('when byom is defined', () => {
-        xit('funnels the array to .byomOptions', () => {})
+        const parameters = [
+          {
+            given: ['--byom', 'byom.js', '--byom-option', 'unknown'],
+            expected: { arguments: ['unknown'], path: 'byom.js' }
+          },
+          {
+            given: [
+              '--byom',
+              'byom.js',
+              '--byom-option',
+              '--unknown',
+              '--byom-option',
+              'unknown-value'
+            ],
+            expected: {
+              path: 'byom.js',
+              arguments: ['--unknown', 'unknown-value']
+            }
+          }
+        ]
+
+        itParses(parameters, 'byomOptions')
       })
     })
   })

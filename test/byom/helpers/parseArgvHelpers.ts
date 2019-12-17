@@ -21,7 +21,7 @@ export const itParses = (
   key: keyof MochapackOptions
 ): void => {
   parameters.forEach(param => {
-    xit(`parses ${param.given.join(' ')}`, () => {
+    it(`parses ${param.given.join(' ')}`, () => {
       const parsed = parseArgv(param.given)
 
       expect(parsed[key]).to.eql(param.expected)

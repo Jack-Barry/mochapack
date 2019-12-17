@@ -1,9 +1,12 @@
 import { Options } from 'yargs'
 
 export const MOCHAPACK_GROUP = 'Mochapack Options:'
+export const BYOM_GROUP = 'B.Y.O.M. Options:'
 
 const mochapackYargsOptionKeys = <const>[
   'byom',
+  'byom-config',
+  'byom-option',
   'clear-terminal',
   'include',
   'mode',
@@ -22,6 +25,16 @@ export const baseMochapackyargsOptions: MochapackYargsOptions = {
     type: 'string',
     requiresArg: true,
     default: undefined
+  },
+  'byom-config': {
+    describe: 'Path to config to provide to your custom Mocha initializer',
+    type: 'string',
+    requiresArg: true
+  },
+  'byom-option': {
+    describe: 'Option to provide to your custom Mocha initializer',
+    type: 'string',
+    requiresArg: true
   },
   'clear-terminal': {
     describe: 'Clear current terminal and purge its histroy',
@@ -67,7 +80,7 @@ export const mochapackYargsOptions = (): MochapackYargsOptions => {
   const options = baseMochapackyargsOptions
 
   Object.keys(options).forEach(key => {
-    options[key].group = MOCHAPACK_GROUP
+    options[key].group = !key.includes('byom') ? MOCHAPACK_GROUP : BYOM_GROUP
   })
 
   return options

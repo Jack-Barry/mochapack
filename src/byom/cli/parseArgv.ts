@@ -1,7 +1,10 @@
-import { MochapackOptions } from '../Mochapack'
+import { MochapackOptions, mochapackDefaultOptions } from '../Mochapack'
 
-const parseArgv = (argv: string[]): MochapackOptions => {
-  return {}
+const parseArgv = (
+  argv: string[],
+  ignoreDefaults: boolean = false
+): MochapackOptions => {
+  return mochapackDefaultOptions
 }
 
 export default parseArgv
