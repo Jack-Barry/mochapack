@@ -1,7 +1,14 @@
 import loaderUtils from 'loader-utils'
 
+interface CustomModule extends NodeModule {
+  cacheable: Function
+  callback: Function
+}
 // Note: no export default here cause of Babel 6
-module.exports = function includeFilesLoader(sourceCode: string) {
+module.exports = function includeFilesLoader(
+  this: CustomModule,
+  sourceCode: string
+) {
   if (this.cacheable) {
     this.cacheable()
   }

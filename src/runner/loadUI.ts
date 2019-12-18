@@ -7,13 +7,13 @@ export default function loadUI(ui: string, cwd?: string) {
     return ui
   }
 
-  let loadedUI = null
+  let loadedUI: string | null = null
   try {
     // try to load reporter from node_modules
     loadedUI = require.resolve(ui)
   } catch (e) {
     // try to load reporter from cwd
-    loadedUI = require.resolve(path.resolve(cwd, ui))
+    loadedUI = require.resolve(path.resolve(cwd || '', ui))
   }
   return loadedUI
 }

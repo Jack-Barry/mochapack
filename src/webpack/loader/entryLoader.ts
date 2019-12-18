@@ -24,7 +24,15 @@ export class EntryConfig {
   }
 }
 
-export const entryLoader = function entryLoader() {
+interface CustomThis {
+  clearDependencies: Function
+  addDependency: {
+    bind: Function
+  }
+  callback: Function
+}
+
+export const entryLoader = function entryLoader(this: CustomThis) {
   const loaderOptions = loaderUtils.getOptions(this)
   const config: EntryConfig = loaderOptions.entryConfig
 

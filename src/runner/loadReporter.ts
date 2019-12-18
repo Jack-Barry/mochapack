@@ -22,7 +22,7 @@ export default function loadReporter(
   } catch (e) {
     // try to load reporter from cwd
     // eslint-disable-next-line global-require, import/no-dynamic-require
-    loadedReporter = require(path.resolve(cwd, reporter))
+    loadedReporter = require(path.resolve(cwd || '', reporter))
   }
   return loadedReporter
 }

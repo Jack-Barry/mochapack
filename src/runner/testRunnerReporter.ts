@@ -120,7 +120,10 @@ class Reporter {
       const { errors, warnings } = this.formatStats(stats)
 
       if (errors.length === 0 && warnings.length === 0) {
-        const { startTime, endTime } = stats
+        const { startTime, endTime } = stats as {
+          startTime: number
+          endTime: number
+        }
         const compileTime = endTime - startTime
         this.logInfo(
           formatTitleInfo('WEBPACK'),

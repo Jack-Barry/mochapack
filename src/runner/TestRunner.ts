@@ -3,7 +3,13 @@ import EventEmitter from 'events'
 import _ from 'lodash'
 import chokidar from 'chokidar'
 import minimatch from 'minimatch'
-import { Configuration as WebpackConfig, Compiler, Stats } from 'webpack'
+import {
+  Configuration as WebpackConfig,
+  Compiler,
+  Stats,
+  Plugin,
+  Output
+} from 'webpack'
 
 import { glob } from '../util/glob'
 import createCompiler from '../webpack/compiler/createCompiler'
@@ -62,7 +68,7 @@ export default class TestRunner extends EventEmitter {
 
   prepareMocha(webpackConfig: WebpackConfig, stats: Stats): Mocha {
     const mocha: Mocha = configureMocha(this.options)
-    const outputPath = webpackConfig.output.path
+    const outputPath: string = (webpackConfig.output as Output).path as string
     const buildStats: BuildStats = getBuildStats(stats, outputPath)
 
     // @ts-ignore
@@ -132,7 +138,7 @@ export default class TestRunner extends EventEmitter {
 
     let mochaRunner: MochaRunner | null = null
     let stats: Stats | null = null
-    let compilationScheduler: () => void | null = null
+    let compilationScheduler: (() => void) | null = null
 
     const uncaughtExceptionListener = err => {
       // mocha catches uncaughtException only while tests are running,
@@ -142,7 +148,7 @@ export default class TestRunner extends EventEmitter {
 
     const runMocha = () => {
       try {
-        const mocha = this.prepareMocha(config, stats)
+        const mocha = this.prepareMocha(config, stats as Stats)
         // unregister our custom exception handler (see declaration)
         process.removeListener('uncaughtException', uncaughtExceptionListener)
 
@@ -291,7 +297,7 @@ export default class TestRunner extends EventEmitter {
       ? _.get(webpackConfig, 'output.publicPath', undefined)
       : outputPath + path.sep
 
-    const plugins = []
+    const plugins: Plugin[] = []
 
     if (this.options.interactive) {
       plugins.push(buildProgressPlugin())

@@ -18,7 +18,10 @@ export default function registerInMemoryCompiler(compiler: Compiler) {
     if (!stats.hasErrors()) {
       Object.keys(stats.compilation.assets).forEach(assetPath =>
         assetMap.set(
-          ensureAbsolutePath(assetPath, compiler.options.output.path),
+          ensureAbsolutePath(
+            assetPath,
+            (compiler.options.output as { path: string }).path
+          ),
           true
         )
       )

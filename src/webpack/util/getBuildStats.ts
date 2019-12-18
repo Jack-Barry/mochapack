@@ -19,8 +19,8 @@ export default function getBuildStats(
   const sortedChunks = sortChunks(chunks, chunkGroups)
   const affectedModules = getAffectedModuleIds(chunks, modules)
 
-  const entries = []
-  const js = []
+  const entries: string[] = []
+  const js: string[] = []
   const pathHelper = f => path.join(outputPath, f)
 
   sortedChunks.forEach((chunk: Chunk) => {

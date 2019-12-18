@@ -20,7 +20,10 @@ export default function createWatchCompiler(
   // this ugly statement to create a watch compiler is unfortunately necessary,
   // as webpack clears the file timestamps with the official compiler.watch()
   const createWatcher = () => new Watching(compiler, watchOptions, noop)
-  let watchCompiler = null
+  let watchCompiler: {
+    close: Function
+    watcher: { pause: Function }
+  } | null = null
 
   return {
     watch() {

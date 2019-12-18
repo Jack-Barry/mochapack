@@ -4,10 +4,12 @@
 
 import Module from 'module'
 
+type PathResolver = (path: any, parent: any) => string | undefined
+
 // the module in which the require() call originated
 let requireCaller
 // all custom registered resolvers
-let pathResolvers = []
+let pathResolvers: (PathResolver | undefined)[] = []
 
 // keep original Module._resolveFilename
 // @ts-ignore
@@ -31,7 +33,7 @@ Module._findPath = function _findPath(...parameters) {
 
   // try to resolve the path with custom resolvers
   for (const resolve of pathResolvers) {
-    const resolved = resolve(request, requireCaller)
+    const resolved = (resolve as PathResolver)(request, requireCaller)
     if (typeof resolved !== 'undefined') {
       return resolved
     }
@@ -58,7 +60,7 @@ export default function registerRequireHook(
   // store all files that were affected by this hook
   const affectedFiles = {}
 
-  const resolvePath = (path, parent) => {
+  const resolvePath: PathResolver = (path, parent) => {
     // get CommonJS module source code for this require() call
     const { path: resolvedPath, source } = resolve(path, parent)
 

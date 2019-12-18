@@ -1,4 +1,4 @@
-import { Module, Chunk } from '../types'
+import { Module, Chunk, DependenciesBlock, ChunkGroup } from '../types'
 
 type ModuleMap = {
   [key: string]: Module
@@ -111,7 +111,7 @@ const buildModuleUsageMap = (
       .filter(block => block.chunkGroup != null)
       .forEach(block => {
         // loop through all generated chunks by this module
-        block.chunkGroup.chunks.map(getId).forEach(chunkId => {
+        ;(block.chunkGroup as ChunkGroup).chunks.map(getId).forEach(chunkId => {
           // and mark all modules of this chunk as a direct dependency of the original module
           Object.values(chunkModuleMap[chunkId] as ModuleMap).forEach(
             (childModule: any) => {

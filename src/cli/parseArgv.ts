@@ -322,13 +322,13 @@ function parse(argv, ignoreDefaults) {
 }
 
 export default function parseArgv(argv, ignoreDefaults = false) {
-  const origMainFilename = require.main.filename
+  const origMainFilename = (require.main as NodeModule).filename
   try {
     // yargs searches for package.json up starting from `require.main.filename` path with `yargs` parser configuration
     // it results in finding mocha `package.json` with config for yargs, which is different then we need
-    require.main.filename = require.resolve('../../bin/_mocha')
+    ;(require.main as NodeModule).filename = require.resolve('../../bin/_mocha')
     return parse(argv, ignoreDefaults)
   } finally {
-    require.main.filename = origMainFilename
+    ;(require.main as NodeModule).filename = origMainFilename
   }
 }

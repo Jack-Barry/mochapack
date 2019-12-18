@@ -15,7 +15,7 @@ export default function configureMocha(options: MochaWebpackOptions) {
   mocha.reporter(reporter, options.reporterOptions)
 
   // colors
-  mocha.useColors(options.colors)
+  mocha.useColors(options.colors ?? false)
 
   // inline-diffs
   mocha.useInlineDiffs(options.useInlineDiffs)
