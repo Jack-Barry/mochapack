@@ -1,5 +1,5 @@
 import { expect } from 'chai'
-import helpers from './helpers'
+import helpers from '.'
 
 describe('camelizeKeys', () => {
   it('converts top-level keys in an object to camelCase', () => {

@@ -5,8 +5,8 @@ import {
   MochapackYargsOptionKey,
   MochapackYargsOptions,
   mochapackYargsOptionKeys
-} from './options'
-import Mochapack, { ByomOptions, MochapackOptions } from '../Mochapack'
+} from '../options'
+import Mochapack, { ByomOptions, MochapackOptions } from '../../Mochapack'
 import { camelizeKeys } from '../helpers'
 
 /**

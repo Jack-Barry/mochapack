@@ -1,6 +1,6 @@
 import { expect } from 'chai'
-import { itParses } from '../../../test/helpers/parseArgvHelpers'
-import parseArgv from './parseArgv'
+import { itParses } from '../../../../test/helpers/parseArgvHelpers'
+import parseArgv from '.'
 
 describe('parseArgv', () => {
   context('encountering duplicated arguments', () => {
