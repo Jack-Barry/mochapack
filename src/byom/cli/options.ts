@@ -1,4 +1,5 @@
 import { Options } from 'yargs'
+import Mochapack from '../Mochapack'
 
 export const MOCHAPACK_GROUP = 'Mochapack Options:'
 export const BYOM_GROUP = 'B.Y.O.M. Options:'
@@ -40,7 +41,7 @@ export const baseMochapackYargsOptions = (): MochapackYargsOptions => ({
   'clear-terminal': {
     describe: 'Clear current terminal and purge its histroy',
     type: 'boolean',
-    default: false
+    default: Mochapack.defaultOptions.clearTerminal
   },
   include: {
     describe: 'Include the provided module in test bundle',
@@ -50,7 +51,7 @@ export const baseMochapackYargsOptions = (): MochapackYargsOptions => ({
   interactive: {
     describe: 'Force interactive mode (defaults to enabled in terminal)',
     type: 'boolean',
-    default: !!process.stdout.isTTY
+    default: Mochapack.defaultOptions.interactive
   },
   mode: {
     describe: 'Webpack mode to use',
@@ -67,7 +68,7 @@ export const baseMochapackYargsOptions = (): MochapackYargsOptions => ({
     describe: 'Path to Webpack config file',
     type: 'string',
     requiresArg: true,
-    default: 'webpack.config.js'
+    default: Mochapack.defaultOptions.webpackConfig
   },
   'webpack-env': {
     describe: 'Environment passed to Webpack config when it is a function',

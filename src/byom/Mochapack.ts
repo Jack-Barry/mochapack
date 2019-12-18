@@ -1,5 +1,4 @@
 import { MochaOptions } from 'mocha'
-import { Configuration } from 'webpack'
 
 type WebpackMode = 'development' | 'production'
 
@@ -34,7 +33,7 @@ export interface MochapackOptions {
   /** Whether or not to suppress informational messages from Mocha */
   quiet?: boolean
   /** Path to Webpack config to use */
-  webpackConfig?: Configuration
+  webpackConfig?: string
   /** Environment to pass to Webpack config if it is a Function */
   webpackEnv?: string
 }
@@ -43,9 +42,9 @@ export default class Mochapack {
   public static defaultOptions: MochapackOptions = {
     clearTerminal: false,
     files: ['./test'],
-    interactive: false,
+    interactive: !!process.stdout.isTTY,
     mochaOptions: {},
     quiet: false,
-    webpackConfig: {}
+    webpackConfig: 'webpack.config.js'
   }
 }
