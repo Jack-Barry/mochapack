@@ -6,7 +6,7 @@ type WebpackMode = 'development' | 'production'
 /**
  * Options used for Bring Your Own Mocha feature
  */
-interface ByomOptions {
+export interface ByomOptions {
   /** Arguments to be passed to and parsed by the custom Mocha initializer */
   args?: string[]
   /** Path to JSON or .js file with config for custom Mocha initializer */
@@ -22,7 +22,7 @@ export interface MochapackOptions {
   /** Whether or not to clear the terminal and purge its history */
   clearTerminal?: boolean
   /** File names or glob patterns to run tests from */
-  files: string[]
+  files?: string[]
   /** Files to include in the test bundle */
   include?: string[]
   /** Whether or not interactive mode is enforced */
@@ -39,13 +39,13 @@ export interface MochapackOptions {
   webpackEnv?: string
 }
 
-export const mochapackDefaultOptions: MochapackOptions = {
-  clearTerminal: false,
-  files: ['./test.js'],
-  interactive: false,
-  mochaOptions: {},
-  quiet: false,
-  webpackConfig: {}
+export default class Mochapack {
+  public static defaultOptions: MochapackOptions = {
+    clearTerminal: false,
+    files: ['./test'],
+    interactive: false,
+    mochaOptions: {},
+    quiet: false,
+    webpackConfig: {}
+  }
 }
-
-export default class Mochapack {}

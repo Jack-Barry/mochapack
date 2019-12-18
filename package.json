@@ -33,7 +33,7 @@
     "postpublish": "yarn run docs:deploy",
     "release": "np",
     "watch": "tsc -w",
-    "test:byom": "yarn run pretest && ts-mocha --recursive --exit \"test/byom/**/*.test.ts\"",
+    "test:byom": "yarn run pretest && ts-mocha --recursive --exit \"src/byom/**/*.test.ts\"",
     "cover:byom": "nyc --reporter=lcov --reporter=text --include \"src/byom/**/*.ts\" --all yarn run test:byom"
   },
   "repository": {

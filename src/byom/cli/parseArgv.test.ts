@@ -1,7 +1,6 @@
-/* eslint-env node, mocha */
 import { expect } from 'chai'
-import { itParses } from '../../helpers/parseArgvHelpers'
-import parseArgv from '../../../../src/byom/cli/parseArgv'
+import { itParses } from '../../../test/helpers/parseArgvHelpers'
+import parseArgv from './parseArgv'
 
 describe('parseArgv', () => {
   context('encountering duplicated arguments', () => {
@@ -95,7 +94,7 @@ describe('parseArgv', () => {
         const parameters = [
           {
             given: ['--byom', 'path/to/byom.js'],
-            expected: { byomOptions: { path: 'path/to/byom.js' } }
+            expected: { path: 'path/to/byom.js' }
           }
         ]
 
@@ -112,10 +111,8 @@ describe('parseArgv', () => {
               'path/to/config.json'
             ],
             expected: {
-              byomOptions: {
-                configPath: 'path/to/config.json',
-                path: 'path/to/byom.js'
-              }
+              configPath: 'path/to/config.json',
+              path: 'path/to/byom.js'
             }
           }
         ]
@@ -255,20 +252,20 @@ describe('parseArgv', () => {
         const parameters = [
           {
             given: ['--byom', 'byom.js', '--byom-option', 'unknown'],
-            expected: { arguments: ['unknown'], path: 'byom.js' }
+            expected: { args: ['unknown'], path: 'byom.js' }
           },
           {
             given: [
               '--byom',
               'byom.js',
               '--byom-option',
-              '--unknown',
+              '"--unknown"',
               '--byom-option',
               'unknown-value'
             ],
             expected: {
               path: 'byom.js',
-              arguments: ['--unknown', 'unknown-value']
+              args: ['--unknown', 'unknown-value']
             }
           }
         ]

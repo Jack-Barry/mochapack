@@ -1,7 +1,6 @@
-/* eslint-env node, mocha */
 import { expect } from 'chai'
-import parseArgv from '../../../src/byom/cli/parseArgv'
-import { MochapackOptions } from '../../../src/byom/Mochapack'
+import parseArgv from '../../src/byom/cli/parseArgv'
+import { MochapackOptions } from '../../src/byom/Mochapack'
 
 type ParsableParameter = {
   given: string[]

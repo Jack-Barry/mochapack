@@ -34,7 +34,10 @@
   },
   "overrides": [
     {
-      "files": ["*.test.ts"],
+      "files": ["*.test.ts", "test/**/*Helpers.ts"],
+      "env": {
+        "mocha": true
+      },
       "rules": {
         "no-unused-expressions": "off"
       }

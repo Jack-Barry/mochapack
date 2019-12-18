@@ -1,4 +1,5 @@
 import { Options } from 'yargs'
+import { camelizeKeys } from '../helpers'
 
 export const MOCHAPACK_GROUP = 'Mochapack Options:'
 export const BYOM_GROUP = 'B.Y.O.M. Options:'
@@ -17,14 +18,15 @@ const mochapackYargsOptionKeys = <const>[
 ]
 
 export type MochapackYargsOptionKey = typeof mochapackYargsOptionKeys[number]
-type MochapackYargsOptions = { [key in MochapackYargsOptionKey]: Options }
+export type MochapackYargsOptions = {
+  [key in MochapackYargsOptionKey]: Options
+}
 
-export const baseMochapackyargsOptions: MochapackYargsOptions = {
+export const baseMochapackYargsOptions = (): MochapackYargsOptions => ({
   byom: {
     describe: 'Path to your custom Mocha initializer',
     type: 'string',
-    requiresArg: true,
-    default: undefined
+    requiresArg: true
   },
   'byom-config': {
     describe: 'Path to config to provide to your custom Mocha initializer',
@@ -33,7 +35,7 @@ export const baseMochapackyargsOptions: MochapackYargsOptions = {
   },
   'byom-option': {
     describe: 'Option to provide to your custom Mocha initializer',
-    type: 'string',
+    type: 'array',
     requiresArg: true
   },
   'clear-terminal': {
@@ -43,7 +45,7 @@ export const baseMochapackyargsOptions: MochapackYargsOptions = {
   },
   include: {
     describe: 'Include the provided module in test bundle',
-    type: 'string',
+    type: 'array',
     requiresArg: true
   },
   interactive: {
@@ -60,7 +62,6 @@ export const baseMochapackyargsOptions: MochapackYargsOptions = {
   quiet: {
     describe: 'Suppress informational messages',
     type: 'boolean',
-    default: undefined,
     alias: 'q'
   },
   'webpack-config': {
@@ -74,10 +75,10 @@ export const baseMochapackyargsOptions: MochapackYargsOptions = {
     type: 'string',
     requiresArg: true
   }
-}
+})
 
 export const mochapackYargsOptions = (): MochapackYargsOptions => {
-  const options = baseMochapackyargsOptions
+  const options = baseMochapackYargsOptions()
 
   Object.keys(options).forEach(key => {
     options[key].group = !key.includes('byom') ? MOCHAPACK_GROUP : BYOM_GROUP
