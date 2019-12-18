@@ -1,10 +1,9 @@
 import { Options } from 'yargs'
-import { camelizeKeys } from '../helpers'
 
 export const MOCHAPACK_GROUP = 'Mochapack Options:'
 export const BYOM_GROUP = 'B.Y.O.M. Options:'
 
-const mochapackYargsOptionKeys = <const>[
+export const mochapackYargsOptionKeys = <const>[
   'byom',
   'byom-config',
   'byom-option',

@@ -3,7 +3,8 @@ import { pick as _pick, omit as _omit } from 'lodash'
 import {
   mochapackYargsOptions,
   MochapackYargsOptionKey,
-  MochapackYargsOptions
+  MochapackYargsOptions,
+  mochapackYargsOptionKeys
 } from './options'
 import Mochapack, { ByomOptions, MochapackOptions } from '../Mochapack'
 import { camelizeKeys } from '../helpers'
@@ -57,8 +58,7 @@ type MochapackKeysYargsOutput = {
 const mochapackParsedArgs = (
   parsedArgs: MochapackYargsOutput
 ): MochapackKeysYargsOutput => {
-  const mochapackKeys = Object.keys(mochapackYargsOptions())
-  return _pick(parsedArgs, mochapackKeys) as MochapackKeysYargsOutput
+  return _pick(parsedArgs, mochapackYargsOptionKeys) as MochapackKeysYargsOutput
 }
 
 /**
@@ -69,7 +69,7 @@ const mochapackParsedArgs = (
  */
 const preventDuplicates = (output: MochapackKeysYargsOutput): void => {
   Object.keys(output).forEach(key => {
-    const multipleAllowed = mochapackYargsOptions()[key]?.type === 'array'
+    const multipleAllowed = mochapackYargsOptions()[key].type === 'array'
     const multiplePresent = output[key] instanceof Array
 
     if (!multipleAllowed && multiplePresent) {
@@ -133,8 +133,8 @@ export const parseArgv = (
   const camelizedYargs = camelizeKeys(mochapackYargs)
 
   Object.entries(camelizedYargs).forEach(([key, value]) => {
+    if (!ignoreDefaults) mochapackOptions[key] = mochapackDefaults[key]
     if (value && !key.includes('byom')) mochapackOptions[key] = value
-    else if (!ignoreDefaults) mochapackOptions[key] = mochapackDefaults[key]
   })
 
   if (mochapackYargs.byom)

@@ -26,13 +26,14 @@ describe('parseArgv', () => {
     })
   })
   ;[true, false].forEach(bool => {
-    context(`when ignore=${bool}`, () => {
+    context(`when ignoreDefaults=${bool}`, () => {
       it(`${bool ? 'ignores' : 'uses'} default options`, () => {
         if (bool) {
           expect(parseArgv([], bool)).to.eql({})
           expect(parseArgv([], bool)).to.be.empty
         } else {
           expect(parseArgv([], bool)).not.to.be.empty
+          expect(parseArgv([], bool).clearTerminal).to.eq(false)
         }
       })
 
