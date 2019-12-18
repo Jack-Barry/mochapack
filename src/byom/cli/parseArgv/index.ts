@@ -1,12 +1,18 @@
 import yargs, { Argv } from 'yargs'
-import { pick as _pick, omit as _omit } from 'lodash'
+import { pick as _pick, omit as _omit, isEmpty as _isEmpty } from 'lodash'
 import {
   mochapackYargsOptions,
   MochapackYargsOptionKey,
   MochapackYargsOptions,
-  mochapackYargsOptionKeys
+  mochapackYargsOptionKeys,
+  MochapackMochaYargsOptionKey
 } from '../options'
-import Mochapack, { ByomOptions, MochapackOptions } from '../../Mochapack'
+import { mochapackMochaYargsOptionKeys } from '../mochaOptions'
+import Mochapack, {
+  ByomOptions,
+  MochapackOptions,
+  MochapackMochaOptions
+} from '../../Mochapack'
 import { camelizeKeys } from '../helpers'
 
 /**
@@ -49,6 +55,9 @@ type MochapackYargsOutput = ReturnType<typeof parseWithYargs>
 type MochapackKeysYargsOutput = {
   [key in MochapackYargsOptionKey]: MochapackYargsOutput[string]
 }
+type MochapackMochaKeysYargsOutput = {
+  [key in MochapackMochaYargsOptionKey]: MochapackYargsOutput[string]
+}
 
 /**
  * Filters the output from Yargs to only include Mochapack specific keys
@@ -59,6 +68,20 @@ const mochapackParsedArgs = (
   parsedArgs: MochapackYargsOutput
 ): MochapackKeysYargsOutput => {
   return _pick(parsedArgs, mochapackYargsOptionKeys) as MochapackKeysYargsOutput
+}
+
+/**
+ * Filters the output from Yargs to only include Mocha specific keys
+ *
+ * @param parsedArgs Raw output from Yargs
+ */
+const mochapackMochaParsedArgs = (
+  parsedArgs: MochapackYargsOutput
+): MochapackMochaKeysYargsOutput => {
+  return _pick(
+    parsedArgs,
+    mochapackMochaYargsOptionKeys
+  ) as MochapackMochaKeysYargsOutput
 }
 
 /**
@@ -113,12 +136,13 @@ const buildByomOptions = (output: MochapackKeysYargsOutput): ByomOptions => {
  * @param argv Array of arguments to parse
  * @param ignoreDefaults Whether or not to use defaults for output objectyarg
  */
-export const parseArgv = (
+const parseArgv = (
   argv: string[],
-  ignoreDefaults: boolean = false
+  ignoreDefaults: boolean = true
 ): MochapackOptions => {
   const yargsOutput = parseWithYargs(argv, ignoreDefaults)
   const mochapackYargs = mochapackParsedArgs(yargsOutput)
+  const mochapackMochaYargs = mochapackMochaParsedArgs(yargsOutput)
 
   preventDuplicates(mochapackYargs)
   validateByomArgs(mochapackYargs)
@@ -131,6 +155,9 @@ export const parseArgv = (
   if (files.length) mochapackOptions.files = files
 
   const camelizedYargs = camelizeKeys(mochapackYargs)
+
+  if (!_isEmpty(mochapackMochaYargs))
+    mochapackOptions.mochaOptions = camelizeKeys(mochapackMochaYargs)
 
   Object.entries(camelizedYargs).forEach(([key, value]) => {
     if (!ignoreDefaults) mochapackOptions[key] = mochapackDefaults[key]

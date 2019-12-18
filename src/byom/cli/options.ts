@@ -1,8 +1,6 @@
 import { Options } from 'yargs'
 import Mochapack from '../Mochapack'
-
-export const MOCHAPACK_GROUP = 'Mochapack Options:'
-export const BYOM_GROUP = 'B.Y.O.M. Options:'
+import { baseMochapackMochaYargsOptions } from './mochaOptions'
 
 export const mochapackYargsOptionKeys = <const>[
   'byom',
@@ -18,9 +16,11 @@ export const mochapackYargsOptionKeys = <const>[
 ]
 
 export type MochapackYargsOptionKey = typeof mochapackYargsOptionKeys[number]
-export type MochapackYargsOptions = {
-  [key in MochapackYargsOptionKey]: Options
-}
+type YargsOptions<T extends string> = { [key in T]: Options }
+export type MochapackYargsOptions = YargsOptions<MochapackYargsOptionKey>
+
+export const MOCHAPACK_GROUP = 'Mochapack Options:'
+export const BYOM_GROUP = 'B.Y.O.M. Options:'
 
 export const baseMochapackYargsOptions = (): MochapackYargsOptions => ({
   byom: {
@@ -84,5 +84,5 @@ export const mochapackYargsOptions = (): MochapackYargsOptions => {
     options[key].group = !key.includes('byom') ? MOCHAPACK_GROUP : BYOM_GROUP
   })
 
-  return options
+  return { ...options, ...baseMochapackMochaYargsOptions() }
 }

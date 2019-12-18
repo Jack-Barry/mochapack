@@ -63,7 +63,7 @@ describe('parseArgv', () => {
 
   context('when no test file paths are provided', () => {
     it('uses "./test" as default for files', () => {
-      const parsed = parseArgv([])
+      const parsed = parseArgv([], false)
 
       expect(parsed.files).to.eql(['./test'])
     })
@@ -206,9 +206,24 @@ describe('parseArgv', () => {
       })
     })
 
-    xcontext('for Mocha', () => {
+    context('for Mocha', () => {
       // Waiting for https://github.com/mochajs/mocha/pull/4122
       // Will test with one or two flags, doesn't need to be extensive
+      const fixturePath = 'test/fixture/cli/parseArgv/.mocharc'
+      context('config', () => {
+        const parameters = [
+          {
+            given: ['--config', `${fixturePath}.js`],
+            expected: { config: `${fixturePath}.js` }
+          },
+          {
+            given: ['--config', `${fixturePath}.yaml`],
+            expected: { config: `${fixturePath}.yaml` }
+          }
+        ]
+
+        itParses(parameters, 'mochaOptions')
+      })
     })
 
     context('for BYOM', () => {

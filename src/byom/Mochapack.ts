@@ -14,6 +14,10 @@ export interface ByomOptions {
   path: string
 }
 
+export interface MochapackMochaOptions extends MochaOptions {
+  config?: string
+}
+
 /** Options used to initiate an instance of Mochapack */
 export interface MochapackOptions {
   /** Options for byom */
@@ -27,7 +31,7 @@ export interface MochapackOptions {
   /** Whether or not interactive mode is enforced */
   interactive?: boolean
   /** Options to pass to the standard Mocha initializer */
-  mochaOptions?: MochaOptions
+  mochaOptions?: MochapackMochaOptions
   /** The Webpack mode to use */
   mode?: WebpackMode
   /** Whether or not to suppress informational messages from Mocha */
