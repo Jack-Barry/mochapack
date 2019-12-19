@@ -1,5 +1,4 @@
 import { MochaOptions } from 'mocha'
-import { Configuration } from 'webpack'
 
 type WebpackMode = 'development' | 'production'
 
@@ -15,6 +14,10 @@ export interface ByomOptions {
   path: string
 }
 
+export interface MochapackMochaOptions extends MochaOptions {
+  config?: string
+}
+
 /** Options used to initiate an instance of Mochapack */
 export interface MochapackOptions {
   /** Options for byom */
@@ -28,13 +31,13 @@ export interface MochapackOptions {
   /** Whether or not interactive mode is enforced */
   interactive?: boolean
   /** Options to pass to the standard Mocha initializer */
-  mochaOptions?: MochaOptions
+  mochaOptions?: MochapackMochaOptions
   /** The Webpack mode to use */
   mode?: WebpackMode
   /** Whether or not to suppress informational messages from Mocha */
   quiet?: boolean
   /** Path to Webpack config to use */
-  webpackConfig?: Configuration
+  webpackConfig?: string
   /** Environment to pass to Webpack config if it is a Function */
   webpackEnv?: string
 }
@@ -43,9 +46,9 @@ export default class Mochapack {
   public static defaultOptions: MochapackOptions = {
     clearTerminal: false,
     files: ['./test'],
-    interactive: false,
+    interactive: !!process.stdout.isTTY,
     mochaOptions: {},
     quiet: false,
-    webpackConfig: {}
+    webpackConfig: 'webpack.config.js'
   }
 }

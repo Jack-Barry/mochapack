@@ -1,10 +1,8 @@
 import { Options } from 'yargs'
-import { camelizeKeys } from '../helpers'
+import Mochapack from '../Mochapack'
+import { baseMochapackMochaYargsOptions } from './mochaOptions'
 
-export const MOCHAPACK_GROUP = 'Mochapack Options:'
-export const BYOM_GROUP = 'B.Y.O.M. Options:'
-
-const mochapackYargsOptionKeys = <const>[
+export const mochapackYargsOptionKeys = <const>[
   'byom',
   'byom-config',
   'byom-option',
@@ -18,9 +16,11 @@ const mochapackYargsOptionKeys = <const>[
 ]
 
 export type MochapackYargsOptionKey = typeof mochapackYargsOptionKeys[number]
-export type MochapackYargsOptions = {
-  [key in MochapackYargsOptionKey]: Options
-}
+type YargsOptions<T extends string> = { [key in T]: Options }
+export type MochapackYargsOptions = YargsOptions<MochapackYargsOptionKey>
+
+export const MOCHAPACK_GROUP = 'Mochapack Options:'
+export const BYOM_GROUP = 'B.Y.O.M. Options:'
 
 export const baseMochapackYargsOptions = (): MochapackYargsOptions => ({
   byom: {
@@ -41,7 +41,7 @@ export const baseMochapackYargsOptions = (): MochapackYargsOptions => ({
   'clear-terminal': {
     describe: 'Clear current terminal and purge its histroy',
     type: 'boolean',
-    default: false
+    default: Mochapack.defaultOptions.clearTerminal
   },
   include: {
     describe: 'Include the provided module in test bundle',
@@ -51,7 +51,7 @@ export const baseMochapackYargsOptions = (): MochapackYargsOptions => ({
   interactive: {
     describe: 'Force interactive mode (defaults to enabled in terminal)',
     type: 'boolean',
-    default: !!process.stdout.isTTY
+    default: Mochapack.defaultOptions.interactive
   },
   mode: {
     describe: 'Webpack mode to use',
@@ -68,7 +68,7 @@ export const baseMochapackYargsOptions = (): MochapackYargsOptions => ({
     describe: 'Path to Webpack config file',
     type: 'string',
     requiresArg: true,
-    default: 'webpack.config.js'
+    default: Mochapack.defaultOptions.webpackConfig
   },
   'webpack-env': {
     describe: 'Environment passed to Webpack config when it is a function',
@@ -84,5 +84,5 @@ export const mochapackYargsOptions = (): MochapackYargsOptions => {
     options[key].group = !key.includes('byom') ? MOCHAPACK_GROUP : BYOM_GROUP
   })
 
-  return options
+  return { ...options, ...baseMochapackMochaYargsOptions() }
 }

@@ -1,6 +1,6 @@
 import { expect } from 'chai'
-import { itParses } from '../../../test/helpers/parseArgvHelpers'
-import parseArgv from './parseArgv'
+import { itParses } from '../../../../test/helpers/parseArgvHelpers'
+import parseArgv from '.'
 
 describe('parseArgv', () => {
   context('encountering duplicated arguments', () => {
@@ -26,13 +26,14 @@ describe('parseArgv', () => {
     })
   })
   ;[true, false].forEach(bool => {
-    context(`when ignore=${bool}`, () => {
+    context(`when ignoreDefaults=${bool}`, () => {
       it(`${bool ? 'ignores' : 'uses'} default options`, () => {
         if (bool) {
           expect(parseArgv([], bool)).to.eql({})
           expect(parseArgv([], bool)).to.be.empty
         } else {
           expect(parseArgv([], bool)).not.to.be.empty
+          expect(parseArgv([], bool).clearTerminal).to.eq(false)
         }
       })
 
@@ -62,7 +63,7 @@ describe('parseArgv', () => {
 
   context('when no test file paths are provided', () => {
     it('uses "./test" as default for files', () => {
-      const parsed = parseArgv([])
+      const parsed = parseArgv([], false)
 
       expect(parsed.files).to.eql(['./test'])
     })
@@ -205,9 +206,24 @@ describe('parseArgv', () => {
       })
     })
 
-    xcontext('for Mocha', () => {
+    context('for Mocha', () => {
       // Waiting for https://github.com/mochajs/mocha/pull/4122
       // Will test with one or two flags, doesn't need to be extensive
+      const fixturePath = 'test/fixture/cli/parseArgv/.mocharc'
+      context('config', () => {
+        const parameters = [
+          {
+            given: ['--config', `${fixturePath}.js`],
+            expected: { config: `${fixturePath}.js` }
+          },
+          {
+            given: ['--config', `${fixturePath}.yaml`],
+            expected: { config: `${fixturePath}.yaml` }
+          }
+        ]
+
+        itParses(parameters, 'mochaOptions')
+      })
     })
 
     context('for BYOM', () => {
