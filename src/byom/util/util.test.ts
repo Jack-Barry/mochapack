@@ -1,5 +1,5 @@
 import { expect } from 'chai'
-import helpers from '.'
+import util from '.'
 
 describe('camelizeKeys', () => {
   it('converts top-level keys in an object to camelCase', () => {
@@ -11,7 +11,7 @@ describe('camelizeKeys', () => {
       snake_key: 'valueC'
     }
 
-    expect(helpers.camelizeKeys(inputObj)).to.eql({
+    expect(util.camelizeKeys(inputObj)).to.eql({
       key: { 'nested-kebab-key': 'valueA' },
       kebabKey: 'valueB',
       snakeKey: 'valueC'

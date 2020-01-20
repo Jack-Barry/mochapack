@@ -4,16 +4,11 @@ import {
   mochapackYargsOptions,
   MochapackYargsOptionKey,
   MochapackYargsOptions,
-  mochapackYargsOptionKeys,
-  MochapackMochaYargsOptionKey
+  mochapackYargsOptionKeys
 } from '../options'
 import { mochapackMochaYargsOptionKeys } from '../mochaOptions'
-import Mochapack, {
-  ByomOptions,
-  MochapackOptions,
-  MochapackMochaOptions
-} from '../../Mochapack'
-import { camelizeKeys } from '../helpers'
+import Mochapack, { ByomOptions, MochapackOptions } from '../../Mochapack'
+import { camelizeKeys } from '../../util'
 
 /**
  * Removes default values from the options available to Yargs
@@ -56,7 +51,7 @@ type MochapackKeysYargsOutput = {
   [key in MochapackYargsOptionKey]: MochapackYargsOutput[string]
 }
 type MochapackMochaKeysYargsOutput = {
-  [key in MochapackMochaYargsOptionKey]: MochapackYargsOutput[string]
+  [key: string]: MochapackYargsOutput[string]
 }
 
 /**
@@ -148,7 +143,7 @@ const parseArgv = (
   validateByomArgs(mochapackYargs)
 
   const mochapackDefaults = Mochapack.defaultOptions
-  const mochapackOptions: MochapackOptions = {}
+  const mochapackOptions: MochapackOptions = {} as MochapackOptions
   const files = yargsOutput._
 
   if (!ignoreDefaults) mochapackOptions.files = mochapackDefaults.files

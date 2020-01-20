@@ -2,7 +2,6 @@ import { MochaOptions } from 'mocha'
 import mochaDefaults from 'mocha/lib/mocharc.json'
 
 type WebpackMode = 'development' | 'production'
-type MochaUi = 'bdd' | 'tdd' | 'qunit' | 'exports' | undefined
 
 /**
  * Options used for Bring Your Own Mocha feature
