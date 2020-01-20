@@ -4,10 +4,13 @@
 //   mochapackMochaYargsOptionKeys is generated based off of their options
 //   baseMochapackMochaYargsOptions is imported from them and tweaked to use
 //     sensible Mochapack default values where applicable
-import defaults from 'mocha/lib/mocharc.json'
 import { list } from 'mocha/lib/cli/run-helpers'
 import { ONE_AND_DONE_ARGS } from 'mocha/lib/cli/one-and-dones'
 import { createInvalidArgumentValueError } from 'mocha/lib/errors'
+
+import Mochapack from '../Mochapack'
+
+const defaults = Mochapack.defaultMochaOptions
 
 const GROUPS = {
   FILES: 'File Handling',
@@ -52,7 +55,8 @@ const mochaYargsOptions = {
     group: GROUPS.RULES
   },
   diff: {
-    default: true,
+    // @ts-ignore
+    default: defaults.diff,
     description: 'Show diff on failure',
     group: GROUPS.OUTPUT
   },
@@ -61,6 +65,7 @@ const mochaYargsOptions = {
     group: GROUPS.RULES
   },
   extension: {
+    // @ts-ignore
     default: defaults.extension,
     defaultDescription: 'js',
     description: 'File extension(s) to load and/or watch',
@@ -126,6 +131,8 @@ const mochaYargsOptions = {
     description: 'List built-in user interfaces & exit'
   },
   invert: {
+    // @ts-ignore
+    default: defaults.invert,
     description: 'Inverts --grep and --fgrep matches',
     group: GROUPS.FILTERS
   },
@@ -135,6 +142,7 @@ const mochaYargsOptions = {
     hidden: true
   },
   opts: {
+    // @ts-ignore
     default: defaults.opts,
     description: 'Path to `mocha.opts`',
     group: GROUPS.CONFIG,
@@ -148,6 +156,8 @@ const mochaYargsOptions = {
     requiresArg: true
   },
   recursive: {
+    // @ts-ignore
+    default: defaults.recursive,
     description: 'Look for tests in subdirectories',
     group: GROUPS.FILES
   },

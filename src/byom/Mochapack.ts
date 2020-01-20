@@ -1,6 +1,8 @@
 import { MochaOptions } from 'mocha'
+import mochaDefaults from 'mocha/lib/mocharc.json'
 
 type WebpackMode = 'development' | 'production'
+type MochaUi = 'bdd' | 'tdd' | 'qunit' | 'exports' | undefined
 
 /**
  * Options used for Bring Your Own Mocha feature
@@ -23,31 +25,36 @@ export interface MochapackOptions {
   /** Options for byom */
   byomOptions?: ByomOptions
   /** Whether or not to clear the terminal and purge its history */
-  clearTerminal?: boolean
+  clearTerminal: boolean
   /** File names or glob patterns to run tests from */
-  files?: string[]
+  files: string[]
   /** Files to include in the test bundle */
   include?: string[]
   /** Whether or not interactive mode is enforced */
-  interactive?: boolean
+  interactive: boolean
   /** Options to pass to the standard Mocha initializer */
-  mochaOptions?: MochapackMochaOptions
+  mochaOptions: MochapackMochaOptions
   /** The Webpack mode to use */
-  mode?: WebpackMode
+  mode: WebpackMode
   /** Whether or not to suppress informational messages from Mocha */
-  quiet?: boolean
+  quiet: boolean
   /** Path to Webpack config to use */
-  webpackConfig?: string
+  webpackConfig: string
   /** Environment to pass to Webpack config if it is a Function */
   webpackEnv?: string
 }
 
 export default class Mochapack {
+  public static defaultMochaOptions: MochaOptions = {
+    ...(mochaDefaults as MochaOptions)
+  }
+
   public static defaultOptions: MochapackOptions = {
     clearTerminal: false,
     files: ['./test'],
     interactive: !!process.stdout.isTTY,
-    mochaOptions: {},
+    mochaOptions: Mochapack.defaultMochaOptions,
+    mode: 'production',
     quiet: false,
     webpackConfig: 'webpack.config.js'
   }
