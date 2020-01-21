@@ -39,7 +39,7 @@ export const baseMochapackYargsOptions = (): MochapackYargsOptions => ({
     requiresArg: true
   },
   'clear-terminal': {
-    describe: 'Clear current terminal and purge its histroy',
+    describe: 'Clear current terminal and purge its history',
     type: 'boolean',
     default: Mochapack.defaultOptions.clearTerminal
   },

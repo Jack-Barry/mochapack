@@ -8,10 +8,6 @@ import { list } from 'mocha/lib/cli/run-helpers'
 import { ONE_AND_DONE_ARGS } from 'mocha/lib/cli/one-and-dones'
 import { createInvalidArgumentValueError } from 'mocha/lib/errors'
 
-import Mochapack from '../Mochapack'
-
-const defaults = Mochapack.defaultMochaOptions
-
 const GROUPS = {
   FILES: 'File Handling',
   FILTERS: 'Test Filters',
@@ -45,7 +41,6 @@ const mochaYargsOptions = {
     group: GROUPS.OUTPUT
   },
   config: {
-    config: true,
     defaultDescription: '(nearest rc file)',
     description: 'Path to config file',
     group: GROUPS.CONFIG
@@ -55,8 +50,6 @@ const mochaYargsOptions = {
     group: GROUPS.RULES
   },
   diff: {
-    // @ts-ignore
-    default: defaults.diff,
     description: 'Show diff on failure',
     group: GROUPS.OUTPUT
   },
@@ -65,8 +58,6 @@ const mochaYargsOptions = {
     group: GROUPS.RULES
   },
   extension: {
-    // @ts-ignore
-    default: defaults.extension,
     defaultDescription: 'js',
     description: 'File extension(s) to load and/or watch',
     group: GROUPS.FILES,
@@ -131,8 +122,6 @@ const mochaYargsOptions = {
     description: 'List built-in user interfaces & exit'
   },
   invert: {
-    // @ts-ignore
-    default: defaults.invert,
     description: 'Inverts --grep and --fgrep matches',
     group: GROUPS.FILTERS
   },
@@ -142,8 +131,6 @@ const mochaYargsOptions = {
     hidden: true
   },
   opts: {
-    // @ts-ignore
-    default: defaults.opts,
     description: 'Path to `mocha.opts`',
     group: GROUPS.CONFIG,
     normalize: true,
@@ -156,13 +143,10 @@ const mochaYargsOptions = {
     requiresArg: true
   },
   recursive: {
-    // @ts-ignore
-    default: defaults.recursive,
     description: 'Look for tests in subdirectories',
     group: GROUPS.FILES
   },
   reporter: {
-    default: defaults.reporter,
     description: 'Specify reporter to use',
     group: GROUPS.OUTPUT,
     requiresArg: true
@@ -203,7 +187,6 @@ const mochaYargsOptions = {
     group: GROUPS.RULES
   },
   slow: {
-    default: defaults.slow,
     description: 'Specify "slow" test threshold (in milliseconds)',
     group: GROUPS.RULES
   },
@@ -212,12 +195,10 @@ const mochaYargsOptions = {
     group: GROUPS.FILES
   },
   timeout: {
-    default: defaults.timeout,
     description: 'Specify test timeout threshold (in milliseconds)',
     group: GROUPS.RULES
   },
   ui: {
-    default: defaults.ui,
     description: 'Specify user interface',
     group: GROUPS.RULES,
     requiresArg: true
@@ -235,6 +216,12 @@ export const mochapackMochaYargsOptionKeys = Object.keys(mochaYargsOptions)
 // This is where changes to default values etc. can be updated for Mochapack
 //  specifically
 export const baseMochapackMochaYargsOptions = () => {
-  const yargsOptions = { ...mochaYargsOptions }
+  const yargsOptions = {
+    ...mochaYargsOptions,
+    config: {
+      ...mochaYargsOptions.config,
+      config: false
+    }
+  }
   return yargsOptions
 }
