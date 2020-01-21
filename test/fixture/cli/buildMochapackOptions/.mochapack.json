@@ -1,0 +1,13 @@
+{
+  "byom": "path/to/byom.js",
+  "byom-config": "path/to/byom-config.js",
+  "byom-option": ["custom", "options"],
+  "clear-terminal": true,
+  "include": ["some/file.ts", "another/file.js"],
+  "interactive": true,
+  "mode": "development",
+  "quiet": true,
+  "webpack-config": "path/to/webpack.config.js",
+  "webpack-env": "customEnv",
+  "ui": "tdd"
+}

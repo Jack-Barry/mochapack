@@ -3,6 +3,7 @@ import path from 'path'
 import buildMochapackOptions from '.'
 import Mochapack, { MochapackOptions } from '../../Mochapack'
 import { expectPartialMatch } from '../../../../test/helpers/helpers'
+import { mochapackYargsOptionKeys } from '../options'
 
 describe('buildMochapackOptions', () => {
   let p: NodeJS.Process
@@ -105,6 +106,40 @@ describe('buildMochapackOptions', () => {
           }
 
           expectPartialMatch(builtOptions.mochaOptions, expectedMochaOptions)
+        })
+      })
+
+      it('properly assigns Mochapack-specific settings', () => {
+        const configFile = path.resolve(fixturesDir, '.mochapack.json')
+
+        p = {
+          argv: ['', '', '--config', configFile]
+        } as NodeJS.Process
+
+        builtOptions = buildMochapackOptions(p)
+
+        const expectedMochapackOptions = {
+          byom: 'path/to/byom.js',
+          'byom-config': 'path/to/byom-config.js',
+          'byom-option': ['custom', 'options'],
+          'clear-terminal': true,
+          include: ['some/file.ts', 'another/file.js'],
+          interactive: true,
+          mode: 'development',
+          quiet: true,
+          'webpack-config': 'path/to/webpack.config.js',
+          'webpack-env': 'customEnv'
+        }
+
+        const expectedMochaOptions = {
+          config: configFile,
+          ui: 'tdd'
+        }
+
+        expectPartialMatch(builtOptions, expectedMochapackOptions)
+        expectPartialMatch(builtOptions.mochaOptions, expectedMochaOptions)
+        mochapackYargsOptionKeys.forEach(key => {
+          expect(builtOptions.mochaOptions[key]).to.be.undefined
         })
       })
     })

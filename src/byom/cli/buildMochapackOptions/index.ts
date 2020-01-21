@@ -5,6 +5,34 @@ import { loadConfig } from 'mocha/lib/cli/config'
 
 import Mochapack, { MochapackOptions } from '../../Mochapack'
 import parseArgv from '../parseArgv'
+import { mochapackYargsOptionKeys, MochapackYargsOptionKey } from '../options'
+
+/**
+ * Splits Mochapack-specific values into a separate object from
+ *   non-Mochapack-specific values
+ *
+ * @param obj An object to split into Mochapack and non-Mochapack
+ *   configurations
+ */
+const extractMochapackConfig = (
+  obj: Object
+): { mochapack: MochapackOptions; nonMochapack: Object } => {
+  const mochapackConfig = {}
+  const nonMochapackConfig = {}
+
+  Object.entries(obj).forEach(([key, value]) => {
+    if (mochapackYargsOptionKeys.includes(key as MochapackYargsOptionKey)) {
+      mochapackConfig[key] = value
+    } else {
+      nonMochapackConfig[key] = value
+    }
+  })
+
+  return {
+    mochapack: mochapackConfig as MochapackOptions,
+    nonMochapack: nonMochapackConfig
+  }
+}
 
 /**
  * Parses arguments and Mocha config file then combines applicable options
@@ -27,14 +55,16 @@ const buildMochapackOptions = (p: NodeJS.Process): MochapackOptions => {
     configOptions = loadConfig(cliOptions.mochaOptions.config)
   }
 
+  const configs = extractMochapackConfig(configOptions)
+
   cliOptions.mochaOptions = _defaults(
     {},
     cliOptions.mochaOptions,
-    configOptions,
+    configs.nonMochapack,
     Mochapack.defaultMochaOptions
   )
 
-  return _defaults({}, cliOptions, Mochapack.defaultOptions)
+  return _defaults({}, cliOptions, configs.mochapack, Mochapack.defaultOptions)
 }
 
 export default buildMochapackOptions
