@@ -39,6 +39,7 @@ export const camelizeKeys = <T extends Object>(obj: T): T => {
  *   the process which will exit when an `'exit'` event is encountered.
  * @param code The code the process exits with
  */
+/* istanbul ignore next */
 export const exit = (lazy: boolean, code: number) => {
   if (lazy) {
     process.on('exit', () => {
@@ -55,10 +56,11 @@ export const exit = (lazy: boolean, code: number) => {
  * NEEDS CLARIFICATION
  * Not sure exactly how/when/where this is used?
  */
+/* istanbul ignore next */
 export const resolve = (mod: string): string => {
   const absolute = existsFileSync(mod) || existsFileSync(`${mod}.js`)
   const file = absolute ? path.resolve(mod) : mod
   return file
 }
 
-export default { camelizeKeys, exit, resolve }
+export default { camelizeKeys, existsFileSync, exit, resolve }
